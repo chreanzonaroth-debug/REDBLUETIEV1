@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Blue Counter</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system;
+    background: #000;
+    color: white;
+}
+
+/* ==== DISPLAY AREA ==== */
+.display {
+    height: 55vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 110px;
+    font-weight: bold;
+}
+
+/* ==== BUTTON AREA ==== */
+.controls {
+    height: 45vh;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+button {
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    height: 55px;
+}
+
+.red { background: #e53935; }
+.blue { background: #1e88e5; }
+.tie { background: #757575; }
+.undo { background: #333; }
+
+button:active {
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="display" id="value">0</div>
+
+<div class="controls">
+    <button class="red" onclick="press('red')">RED</button>
+    <button class="blue" onclick="press('blue')">BLUE</button>
+    <button class="tie" onclick="press('tie')">TIE</button>
+    <button class="undo" onclick="undo()">UNDO</button>
+</div>
+
+<script>
+let value = Number(localStorage.getItem("value")) || 0;
+let lastWasTie = localStorage.getItem("lastWasTie") === "true";
+let history = JSON.parse(localStorage.getItem("history") || "[]");
+
+update();
+
+function press(type) {
+    history.push({ value, lastWasTie });
+
+    if (type === "tie") {
+        lastWasTie = true;
+    } else {
+        value = lastWasTie ? 1 : value + 1;
+        lastWasTie = false;
+    }
+    save();
+}
+
+function undo() {
+    if (!history.length) return;
+    const prev = history.pop();
+    value = prev.value;
+    lastWasTie = prev.lastWasTie;
+    save();
+}
+
+function save() {
+    localStorage.setItem("value", value);
+    localStorage.setItem("lastWasTie", lastWasTie);
+    localStorage.setItem("history", JSON.stringify(history));
+    update();
+}
+
+function update() {
+    document.getElementById("value").textContent = value;
+}
+</script>
+
+</body>
+</html>

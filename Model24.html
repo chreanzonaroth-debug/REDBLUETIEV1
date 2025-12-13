@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កម្មវិធីប្រតិបត្តិលក្ខខណ្ឌ Logic</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Noto Sans Khmer', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--dark);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+            gap: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 24px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-size: 16px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper .icon {
+            position: absolute;
+            left: 15px;
+            color: var(--gray);
+            font-size: 20px;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            font-size: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .current-value {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+        
+        .current-value span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 16px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(58, 12, 163, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2aa8d0;
+            transform: translateY(-3px);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0871b;
+            transform: translateY(-3px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #e11574;
+            transform: translateY(-3px);
+        }
+        
+        .result-box {
+            background: linear-gradient(to bottom right, #f0f7ff, #e6f0ff);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed var(--primary);
+            margin-bottom: 25px;
+        }
+        
+        .result-label {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .history-section {
+            margin-top: 25px;
+        }
+        
+        .history-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-list {
+            list-style-type: none;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .history-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .history-item {
+            background-color: white;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+        
+        .history-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+        
+        .history-input {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .history-result {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .rules-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #f8f9ff;
+            border-radius: var(--border-radius);
+        }
+        
+        .rules-title {
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .rule-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary);
+        }
+        
+        .rule-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .rule-card p {
+            color: var(--dark);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .empty-history {
+            text-align: center;
+            color: var(--gray);
+            padding: 30px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+        
+        /* Icons */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+        }
+        
+        /* Animation for result */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .result-updated {
+            animation: pulse 0.5s ease;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-calculator"></i> កម្មវិធីប្រតិបត្តិលក្ខខណ្ឌ Logic</h1>
+            <p>បញ្ចូលតម្លៃ a ដើម្បីគណនាតម្លៃ b តាមលក្ខខណ្ឌខាងក្រោម</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-keyboard"></i> បញ្ចូលតម្លៃ</h2>
+                
+                <div class="input-group">
+                    <label for="inputA"><i class="fas fa-hashtag"></i> តម្លៃ a</label>
+                    <div class="input-wrapper">
+                        <!-- <div class="icon">a =</div> -->
+                        <input type="number" id="inputA" placeholder="បញ្ចូលតម្លៃ a" value="10">
+                    </div>
+                </div>
+                
+                <div class="current-value">
+                    <div>តម្លៃ b បច្ចុប្បន្ន:</div>
+                    <div><span id="currentB">0</span></div>
+                </div>
+                
+                <div class="buttons-grid">
+                    <button class="btn btn-primary" onclick="calculate()">
+                        <i class="fas fa-play-circle"></i> គណនា
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearInput()">
+                        <i class="fas fa-eraser"></i> លុបការបញ្ចូល
+                    </button>
+                    <button class="btn btn-warning" id="undoBtn" onclick="undo()" disabled>
+                        <i class="fas fa-undo"></i> ត្រឡប់ក្រោយ
+                    </button>
+                    <button class="btn btn-danger" onclick="resetAll()">
+                        <i class="fas fa-redo"></i> កំណត់ឡើងវិញ
+                    </button>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> លទ្ធផល</h2>
+                
+                <div class="result-box">
+                    <div class="result-label">តម្លៃ b ថ្មី</div>
+                    <div class="result-value" id="result">0</div>
+                </div>
+                
+                <div class="history-section">
+                    <div class="history-title">
+                        <span><i class="fas fa-history"></i> ប្រវត្តិការគណនា</span>
+                        <span id="historyCount">0 កំណត់ត្រា</span>
+                    </div>
+                    
+                    <ul class="history-list" id="historyList">
+                        <li class="empty-history">មិនទាន់មានប្រវត្តិការគណនា</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+<!--         
+         <div class="rules-section">
+            <h3 class="rules-title"><i class="fas fa-info-circle"></i> ក្បួនគណនាតម្លៃ b</h3>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <h4>លក្ខខណ្ឌទី១: a < 6</h4>
+                    <p>ប្រសិនបើតម្លៃ a តូចជាង 6 នោះតម្លៃ b ត្រូវកំណត់ជា 0</p>
+                </div>
+                <div class="rule-card">
+                    <h4>លក្ខខណ្ឌទី២: a > 9</h4>
+                    <p>ប្រសិនបើតម្លៃ a ធំជាង 9 នោះ:
+                       <br>- បើ b = 0 → b = 6
+                       <br>- បើ b ≠ 0 → b = b + 6
+                    </p>
+                </div> 
+                 <div class="rule-card">
+                    <h4>លក្ខខណ្ឌទី៣: a > 5 និង b ≥ 18</h4>
+                    <p>ប្រសិនបើតម្លៃ a ធំជាង 5 និងតម្លៃ b បច្ចុប្បន្នធំជាងឬស្មើ 18 នោះ b = b + 6</p>
+                </div>
+                <div class="rule-card">
+                    <h4>គ្មានលក្ខខណ្ឌត្រឹមត្រូវ</h4>
+                    <p>ប្រសិនបើគ្មានលក្ខខណ្ឌណាខាងលើត្រឹមត្រូវទេ តម្លៃ b នៅត្រូវដដែល</p>
+                </div>
+            </div>
+        </div> 
+    </div>  -->
+
+    <script>
+        // Variables
+        let b = 0; // Current value of b
+        let history = []; // Array to store history of calculations
+        let historyIndex = -1; // Current position in history
+        
+        // DOM Elements
+        const inputA = document.getElementById('inputA');
+        const resultElement = document.getElementById('result');
+        const currentBElement = document.getElementById('currentB');
+        const historyList = document.getElementById('historyList');
+        const historyCount = document.getElementById('historyCount');
+        const undoBtn = document.getElementById('undoBtn');
+        
+        // Initialize display
+        updateDisplay();
+        
+        // Main calculate function
+        function calculate() {
+            const a = Number(inputA.value);
+            const previousB = b; // Store previous value for history
+            
+            // Apply logic rules
+            if (a < 6) {
+                // Case 1: a < 6 → reset
+                b = 0;
+            } else if (a > 9) {
+                // Case 2: a > 9
+                if (b === 0) {
+                    b = 6;
+                } else {
+                    b = b + 6;
+                }
+            } else if (a > 5 && b >= 18) {
+                // Case 3: a > 5 and b >= 18
+                b = b + 6;
+            }
+            // Otherwise, b remains unchanged
+            
+            // Add to history if b changed
+            if (b !== previousB) {
+                addToHistory(a, previousB, b);
+            }
+            
+            // Update display with animation
+            updateDisplay();
+            animateResult();
+            
+            // Clear input after calculation (optional)
+            // inputA.value = '';
+        }
+        
+        // Add calculation to history
+        function addToHistory(a, previousB, newB) {
+            const historyItem = {
+                a: a,
+                previousB: previousB,
+                newB: newB,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            
+            history.push(historyItem);
+            historyIndex = history.length - 1;
+            updateHistoryDisplay();
+            updateUndoButton();
+        }
+        
+        // Undo last calculation
+        function undo() {
+            if (historyIndex >= 0) {
+                const previousState = history[historyIndex];
+                b = previousState.previousB;
+                historyIndex--;
+                
+                updateDisplay();
+                updateHistoryDisplay();
+                updateUndoButton();
+                animateResult();
+            }
+        }
+        
+        // Clear input field
+        function clearInput() {
+            inputA.value = '';
+            inputA.focus();
+        }
+        
+        // Reset everything
+        function resetAll() {
+            b = 0;
+            history = [];
+            historyIndex = -1;
+            inputA.value = '10';
+            
+            updateDisplay();
+            updateHistoryDisplay();
+            updateUndoButton();
+            animateResult();
+        }
+        
+        // Update all display elements
+        function updateDisplay() {
+            resultElement.textContent = b;
+            currentBElement.textContent = b;
+        }
+        
+        // Update history display
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<li class="empty-history">មិនទាន់មានប្រវត្តិការគណនា</li>';
+                historyCount.textContent = '0 កំណត់ត្រា';
+                return;
+            }
+            
+            historyCount.textContent = `${history.length} កំណត់ត្រា`;
+            
+            // Show last 5 items in reverse order (newest first)
+            const displayHistory = [...history].reverse().slice(0, 5);
+            
+            displayHistory.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                li.innerHTML = `
+                    <div class="history-input">a = ${item.a}</div>
+                    <div class="history-result">${item.previousB} → ${item.newB}</div>
+                `;
+                historyList.appendChild(li);
+            });
+        }
+        
+        // Update undo button state
+        function updateUndoButton() {
+            if (historyIndex >= 0) {
+                undoBtn.disabled = false;
+                undoBtn.classList.remove('btn-warning');
+                undoBtn.classList.add('btn-warning');
+            } else {
+                undoBtn.disabled = true;
+                undoBtn.classList.remove('btn-warning');
+                undoBtn.classList.add('btn-warning');
+            }
+        }
+        
+        // Animate result when changed
+        function animateResult() {
+            resultElement.classList.add('result-updated');
+            setTimeout(() => {
+                resultElement.classList.remove('result-updated');
+            }, 500);
+        }
+        
+        // Allow Enter key to trigger calculation
+        inputA.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                calculate();
+            }
+        });
+        
+        // Focus on input when page loads
+        window.onload = function() {
+            inputA.focus();
+        };
+    </script>
+</body>
+</html>
